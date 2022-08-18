@@ -1,0 +1,23 @@
+object DataModule2: TDataModule2
+  OldCreateOrder = False
+  Height = 363
+  Width = 458
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      
+        'Database=C:\Users\franc\OneDrive\Documentos\Embarcadero\Studio\P' +
+        'rojects\banco.db'
+      'LockingMode=Normal'
+      'DriverID=SQLite')
+    Connected = True
+    Left = 48
+    Top = 40
+  end
+  object FDQuery1: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from pessoa')
+    Left = 48
+    Top = 120
+  end
+end
