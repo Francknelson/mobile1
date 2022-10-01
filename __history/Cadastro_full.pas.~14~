@@ -1,0 +1,106 @@
+unit Cadastro_full;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.TabControl,
+  FMX.MultiView, FMX.ListBox;
+
+type
+  TForm9 = class(TForm)
+    Image1: TImage;
+    Layout1: TLayout;
+    Label1: TLabel;
+    Layout2: TLayout;
+    MultiView1: TMultiView;
+    Button2: TButton;
+    Rectangle1: TRectangle;
+    Image2: TImage;
+    Button1: TButton;
+    StyleBook1: TStyleBook;
+    TabControl1: TTabControl;
+    TabItem2: TTabItem;
+    Image4: TImage;
+    Layout5: TLayout;
+    Circle2: TCircle;
+    Image7: TImage;
+    Layout6: TLayout;
+    nome: TEdit;
+    Label8: TLabel;
+    Label9: TLabel;
+    cpf: TEdit;
+    Label10: TLabel;
+    genero: TComboBox;
+    Label11: TLabel;
+    Label12: TLabel;
+    data_nascimento: TEdit;
+    telefone: TEdit;
+    Label13: TLabel;
+    email: TEdit;
+    TabItem3: TTabItem;
+    Image5: TImage;
+    Layout7: TLayout;
+    Circle3: TCircle;
+    Image8: TImage;
+    Layout8: TLayout;
+    cep: TEdit;
+    Label15: TLabel;
+    Label16: TLabel;
+    endereco: TEdit;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    bairro: TEdit;
+    cidade: TEdit;
+    complemento: TEdit;
+    estado: TEdit;
+    Label20: TLabel;
+    RoundRect2: TRoundRect;
+    Label21: TLabel;
+    RoundRect1: TRoundRect;
+    Label2: TLabel;
+    procedure RoundRect2Click(Sender: TObject);
+    procedure RoundRect1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form9: TForm9;
+
+implementation
+
+{$R *.fmx}
+
+uses UDB, Produtos;
+
+
+procedure TForm9.RoundRect1Click(Sender: TObject);
+begin
+  if not Assigned(Form7) then
+      Application.CreateForm(TForm7, Form7);
+    Form7.Show;
+    Form9.Close;
+end;
+
+procedure TForm9.RoundRect2Click(Sender: TObject);
+begin
+  DB.FDQueryPessoa.Edit;
+  DB.FDQueryPessoanome.AsString := nome.Text;
+  DB.FDQueryPessoacpf.AsString := cpf.Text;
+  DB.FDQueryPessoacelular.AsString := telefone.Text;
+  DB.FDQueryPessoacep.AsString := cep.Text;
+  DB.FDQueryPessoaendereco.AsString := endereco.Text;
+  DB.FDQueryPessoacidade.AsString := cidade.Text;
+  DB.FDQueryPessoauf.AsString := estado.Text;
+  DB.FDQueryPessoabairro.AsString := bairro.Text;
+  DB.FDQueryPessoaemail.AsString := email.Text;
+  DB.FDQueryPessoagenero.AsString := genero.Items[0];
+  DB.FDQueryPessoa.Post;
+end;
+
+end.

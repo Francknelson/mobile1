@@ -1,0 +1,156 @@
+unit UDB;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
+  FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.FMXUI.Wait, Data.DB,
+  FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.DataSet, IOUtils;
+
+type
+  TDataModule2 = class(TDataModule)
+    FDConnection1: TFDConnection;
+    FDQueryPessoa: TFDQuery;
+    FDQueryProduto: TFDQuery;
+    FDQueryProdutoid: TFDAutoIncField;
+    FDQueryProdutonome: TStringField;
+    FDQueryProdutodescricao: TStringField;
+    FDQueryProdutovalor: TBCDField;
+    FDQueryProdutoquantidade: TIntegerField;
+    FDQueryProdutoimg_produto: TBlobField;
+    FDQueryPessoaid: TFDAutoIncField;
+    FDQueryPessoanome: TStringField;
+    FDQueryPessoausuario: TStringField;
+    FDQueryPessoacpf: TStringField;
+    FDQueryPessoacelular: TStringField;
+    FDQueryPessoacep: TStringField;
+    FDQueryPessoaendereco: TStringField;
+    FDQueryPessoacidade: TStringField;
+    FDQueryPessoauf: TStringField;
+    FDQueryPessoabairro: TStringField;
+    FDQueryPessoaemail: TStringField;
+    FDQueryPessoasenha: TStringField;
+    FDQueryPessoaimg_usuario: TBlobField;
+    FDQueryFavorito: TFDQuery;
+    FDQueryFavoritoid: TFDAutoIncField;
+    FDQueryFavoritonome: TStringField;
+    FDQueryFavoritodescricao: TStringField;
+    FDQueryFavoritovalor: TBCDField;
+    FDQueryFavoritoquantidade: TIntegerField;
+    FDQueryFavoritofavorito: TStringField;
+    FDQueryFavoritoimg_produto: TBlobField;
+    FDQueryProdutofavorito: TStringField;
+    FDQueryListaFavoritos: TFDQuery;
+    FDQueryListaFavoritosid: TFDAutoIncField;
+    FDQueryListaFavoritosnome: TStringField;
+    FDQueryListaFavoritosdescricao: TStringField;
+    FDQueryListaFavoritosvalor: TBCDField;
+    FDQueryListaFavoritosquantidade: TIntegerField;
+    FDQueryListaFavoritosfavorito: TStringField;
+    FDQueryListaFavoritosimg_produto: TBlobField;
+    FDQueryPedidos: TFDQuery;
+    FDQueryItemPedido: TFDQuery;
+    FDQueryPessoagenero: TWideStringField;
+    procedure FDConnection1BeforeConnect(Sender: TObject);
+    procedure FDConnection1AfterConnect(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DB: TDataModule2;
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TDataModule2.FDConnection1AfterConnect(Sender: TObject);
+var
+  strSQL: string;
+begin
+    strSQL := 'create table IF NOT EXISTS pessoa( 		' + //
+            'id integer not null primary key autoincrement, ' + //
+            'nome varchar(40),                              ' + //
+            'usuario varchar(40),                              ' + //
+            'cpf varchar(11),                               ' + //
+            'celular varchar(13),                           ' + //
+            'cep varchar(10),                               ' + //
+            'endereco varchar(60),                          ' + //
+            'cidade varchar(60),                            ' + //
+            'uf char(2),                                    ' + //
+            'bairro varchar(60),                            ' + //
+            'email varchar(60),                             ' + //
+            'senha varchar(40),                             ' + //
+            'img_usuario blob),                             ' + //
+            'genero string';
+  FDConnection1.ExecSQL(strSQL);
+
+  strSQL := EmptyStr;
+  strSQL := ' create table IF NOT EXISTS produto( ' + //
+            ' id integer not null primary key autoincrement, ' + //
+            ' nome varchar(20), '+ //
+            ' descricao varchar(200), '+//
+            ' valor numeric(14,2), '+
+            ' quantidade integer, '+
+            ' favorito varchar(5), '+
+            ' img_produto blob) ';
+
+    FDConnection1.ExecSQL(strSQL);
+
+    strSQL := EmptyStr;
+    strSQL := ' create table IF NOT EXISTS pedido( ' + //
+            ' id integer not null primary key autoincrement, ' + //
+            ' id_pessoa integer, '+ //
+            ' status varchar(12), '+ //
+            ' data DATETIME, '+//
+            ' vlr_pedido numeric(8,2), '+   //
+            ' foreign key (idPessoa) references pessoa(id)) ';  //
+
+    FDConnection1.ExecSQL(strSQL);
+
+    strSQL := EmptyStr;
+    strSQL := ' create table IF NOT EXISTS itemPedido( ' + //
+            ' id integer not null primary key autoincrement, ' + //
+            ' id_pedido integer, '+ //
+            ' id_produto integer, '+//
+            ' qte_produto integer, '+ //
+            ' vlr_item numeric(8,2), '+ //
+            ' foreign key (idPedido) references pedido (id) ' + //
+            ' foreign key (idProduto) references produto (id)) '; //
+
+    FDConnection1.ExecSQL(strSQL);
+
+
+  FDQueryPessoa.Active := true;
+  FDQueryProduto.Active := true;
+  FDQueryFavorito.Active := true;
+  FDQueryListaFavoritos.Active := true;
+  FDQueryPedidos.Active := true;
+  FDQueryItemPedido.Active := true;
+
+end;
+
+procedure TDataModule2.FDConnection1BeforeConnect(Sender: TObject);
+var
+  strPath: string;
+begin
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  strPath := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath,
+  'banco.db');
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+  strPath := System.IOUtils.TPath.Combine('C:\Users\franc\OneDrive\Documentos\Embarcadero\Studio\Projects\DB\', 'banco.db');
+{$ENDIF}
+  FDConnection1.Params.Values['UseUnicode'] := 'False';
+  FDConnection1.Params.Values['DATABASE'] := strPath;
+end;
+
+end.

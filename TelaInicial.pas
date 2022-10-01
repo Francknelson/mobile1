@@ -32,11 +32,14 @@ implementation
 
 {$R *.fmx}
 
-uses Produtos;
+uses Produtos, Produtos1;
 
 procedure TForm3.RoundRect1Click(Sender: TObject);
 begin
-  Form5.Show();
+  if not Assigned(Form7) then
+      Application.CreateForm(TForm7, Form7);
+    Form7.Show;
+    Form3.Close;
 end;
 
 end.

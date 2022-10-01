@@ -1,0 +1,349 @@
+unit Produtos;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.MultiView,IOUtils,
+  FMX.TabControl;
+
+type
+  TForm7 = class(TForm)
+    Image1: TImage;
+    Layout1: TLayout;
+    Label1: TLabel;
+    Image2: TImage;
+    Layout2: TLayout;
+    Rectangle1: TRectangle;
+    Button1: TButton;
+    MultiView1: TMultiView;
+    TabControl1: TTabControl;
+    TabItem1: TTabItem;
+    TabItem2: TTabItem;
+    TabItem3: TTabItem;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    ListaProdutos: TVertScrollBox;
+    StyleBook1: TStyleBook;
+    Button2: TButton;
+    Button3: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure GetProdutoBase;
+    procedure CarregarListaProdutos(id: integer; nome,
+                                    descricao: string;
+                                    valor: double);
+    procedure AddFavoritos(Sender: TObject);
+    function favorito(id: integer): boolean;
+    procedure AddItem(Sender: TObject);
+    procedure RemoveItem(Sender: TObject);
+  public
+    FValorTotal : double;
+    { Public declarations }
+  end;
+
+var
+  Form7: TForm7;
+
+implementation
+
+{$R *.fmx}
+
+uses UDB, Cadastro_full, Favoritos;
+
+{ TForm7 }
+
+
+
+procedure TForm7.AddItem(Sender: TObject);
+begin
+   DB.FDQueryItemPedido.Insert;
+   DB.FDQueryPedidos.Insert;
+   DB.FDQueryProduto.Locate('id', TButton(Sender).TagString,[]);
+   DB.FDQueryPedidos.FieldByName('id_pessoa').AsInteger := DB.FDQueryPessoaid.AsInteger;
+   DB.FDQueryPedidos.FieldByName('status').AsString := 'Pendente';
+   DB.FDQueryPedidos.FieldByName('data').AsDateTime := now();
+   FValorTotal := DB.FDQueryPedidos.FieldByName('vlr_pedido').AsFloat + DB.FDQueryProdutovalor.AsFloat ;
+   DB.FDQueryPedidos.Append;
+   DB.FDQueryPedidos.FieldByName('vlr_pedido').AsFloat := FValorTotal;
+   DB.FDQueryPedidos.Post;
+
+   DB.FDQueryItemPedido.Append;
+   DB.FDQueryItemPedido.FieldByName('idPedido').AsInteger :=
+   DB.FDQueryPedidos.FieldByName('id').AsInteger;
+   DB.FDQueryItemPedido.FieldByName('idProduto').AsInteger :=
+   DB.FDQueryProduto.FieldByName('id').AsInteger;
+   DB.FDQueryItemPedido.FieldByName('qteProduto').AsInteger :=
+   DB.FDQueryItemPedido.FieldByName('qteProduto').AsInteger + 1;
+   DB.FDQueryItemPedido.FieldByName('vlrItem').AsFloat :=
+   DB.FDQueryProdutovalor.AsFloat;
+   DB.FDQueryItemPedido.Post;
+
+end;
+
+procedure TForm7.Button2Click(Sender: TObject);
+begin
+  if not Assigned(Form9) then
+      Application.CreateForm(TForm9, Form9);
+    Form9.Show;
+    Form7.Close;
+end;
+
+procedure TForm7.Button3Click(Sender: TObject);
+begin
+  if not Assigned(Form10) then
+      Application.CreateForm(TForm10, Form10);
+    Form10.Show;
+    Form7.Close;
+end;
+
+procedure TForm7.CarregarListaProdutos(id: integer; nome,
+                                       descricao: string;
+                                       valor: double);
+
+var
+  rect, rect_barra: TRectangle;
+  rect_icone: TCircle;
+  lbl: TLabel;
+  img: TImage;
+  i, valorEstrela: integer;
+  btn: TButton;
+begin
+
+  // fundo
+  rect := TRectangle.Create(ListaProdutos);
+  with rect do
+  begin
+    Align := TAlignLayout.Top;
+    Height := 110;
+    Fill.Color := $FF616161;
+    Stroke.Kind := TBrushKind.Solid;
+    Stroke.Color := $FFD4D5D7;
+    Margins.Top := 10;
+    Margins.Left := 10;
+    Margins.Right := 10;
+    XRadius := 8;
+    YRadius := 8;
+  end;
+
+  // Barra inferior...
+  rect_barra := TRectangle.Create(rect);
+  with rect_barra do
+  begin
+    Align := TAlignLayout.Bottom;
+    Height := 45;
+    Fill.Color := $FFF4F4F4;
+    Stroke.Kind := TBrushKind.Solid;
+    Stroke.Color := $FFD4D5D7;
+    Sides := [TSide.Left, TSide.Bottom, TSide.Right];
+    XRadius := 8;
+    YRadius := 8;
+    Corners := [TCorner.BottomLeft, TCorner.BottomRight];
+    HitTest := False;
+    rect.AddObject(rect_barra);
+  end;
+
+  lbl := TLabel.Create(rect);
+  with lbl do
+  begin
+    StyledSettings := StyledSettings - [TStyledSetting.Size,
+      TStyledSetting.FontColor, TStyledSetting.Style];
+    TextSettings.FontColor := $FF333333;
+    Text := nome;
+    font.Size := 16;
+    font.Style := [TFontStyle.fsBold];
+    Position.x := 50;
+    Position.Y := 10;
+    Width := 200;
+    rect.AddObject(lbl);
+  end;
+
+  lbl := TLabel.Create(rect_barra);
+  with lbl do
+  begin
+    StyledSettings := StyledSettings - [TStyledSetting.Size,
+      TStyledSetting.FontColor, TStyledSetting.Style];
+    TextSettings.FontColor := $FFDF0B0B;
+    Text := descricao;
+    font.Size := 11;
+    font.Style := [TFontStyle.fsBold];
+    Position.x := 5;
+    Position.Y := 70;
+    Width := 500;
+    rect.AddObject(lbl);
+  end;
+
+  lbl := TLabel.Create(rect);
+  with lbl do
+  begin
+    StyledSettings := StyledSettings - [TStyledSetting.Size,
+      TStyledSetting.FontColor, TStyledSetting.Style];
+    TextSettings.FontColor := $FFDF0B0B;
+    Text := 'R$'+FloatToStr(valor);
+    font.Size := 20;
+    font.Style := [TFontStyle.fsBold];
+    Position.x := 200;
+    Position.Y := 10;
+    Width := 500;
+    rect.AddObject(lbl);
+  end;
+
+  //ImgFavorito
+  img := TImage.Create(rect);
+  if not favorito(id) then
+    begin
+        with img do
+        begin
+          {$IFDEF MSWINDOWS}
+            Bitmap.LoadFromFile
+            (IOUtils.TPath.Combine
+            ('C:\Users\franc\OneDrive\Documentos\Embarcadero\Studio\Projects',
+            'heart_nosel.png'));
+          {$ENDIF}
+          {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+            Bitmap.LoadFromFile
+            (IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath,
+            'heart_nosel.png'));
+          {$ENDIF}
+          Height := 30;
+          Width := 30;
+          Position.x := 350;
+          Position.Y := 5;
+          name := 'imgheartNoSel' + IntToStr(id);
+          TagString := IntToStr(id);
+          OnClick := AddFavoritos;
+          Visible := true;
+          rect.AddObject(img);
+        end;
+    end
+  else
+    begin
+       with img do
+       begin
+         {$IFDEF MSWINDOWS}
+            Bitmap.LoadFromFile
+            (IOUtils.TPath.Combine
+            ('C:\Users\franc\OneDrive\Documentos\Embarcadero\Studio\Projects',
+            'heart_yessel.png'));
+          {$ENDIF}
+          {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+            Bitmap.LoadFromFile
+            (IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath,
+            'heart_yessel.png'));
+          {$ENDIF}
+          Height := 30;
+          Width := 30;
+          Position.x := 350;
+          Position.Y := 5;
+          name := 'imgheartYesSel' + IntToStr(id);
+          TagString := IntToStr(id);
+          Visible := true;
+          rect.AddObject(img);
+       end;
+    end;
+  //Botao add item
+  btn := TButton.Create(rect_barra);
+  with btn do
+  begin
+    nome := 'btnAdd' + IntToStr(id);
+    StyleLookup := 'additembutton';
+    Position.x := 320;
+    Position.y := 80;
+    Height := 25;
+    Width := 25;
+    TagString := IntToStr(id);
+    OnClick := AddItem;
+    rect.AddObject(btn);
+  end;
+
+  //Numero de items do pedido
+  lbl := TLabel.Create(rect_barra);
+  with lbl do
+  begin
+    StyledSettings := StyledSettings - [TStyledSetting.Size,
+      TStyledSetting.FontColor, TStyledSetting.Style];
+    TextSettings.FontColor := $FFDF0B0B;
+    Text := '0';
+    font.Size := 16;
+    font.Style := [TFontStyle.fsBold];
+    Position.x := 360;
+    Position.Y := 85;
+    Width := 30;
+    nome := 'labelAdd' + IntToStr(id);
+    rect.AddObject(lbl);
+  end;
+
+  //Botao remove item
+  btn := TButton.Create(rect_barra);
+  with btn do
+  begin
+    nome := 'btnRemove' + IntToStr(id);
+    StyleLookup := 'deleteitembutton';
+    Position.x := 380;
+    Position.y := 80;
+    Height := 25;
+    Width := 25;
+    TagString := IntToStr(id);
+    OnClick := RemoveItem;
+    rect.AddObject(btn);
+  end;
+
+
+   ListaProdutos.AddObject(rect);
+end;
+
+function TForm7.favorito(id: integer): boolean;
+begin
+  DB.FDQueryFavorito.Close;
+  DB.FDQueryFavorito.ParamByName('pIdProduto').AsInteger := id;
+  DB.FDQueryFavorito.Open();
+
+  if not DB.FDQueryFavorito.IsEmpty then
+    Result := True
+  else
+    Result := False;
+end;
+
+procedure TForm7.AddFavoritos(Sender: TObject);
+var
+  AId: string;
+begin
+  AId := (TRectangle(Sender).TagString);
+  DB.FDQueryProduto.Locate('id', AId, []);
+  DB.FDQueryProduto.Edit;
+  DB.FDQueryProdutofavorito.AsString := 'S';
+  DB.FDQueryProduto.Post;
+  ShowMessage('Adicionado ao seus favoritos');
+end;
+
+procedure TForm7.FormCreate(Sender: TObject);
+begin
+ GetProdutoBase;
+end;
+
+procedure TForm7.GetProdutoBase;
+begin
+  DB.FDQueryProduto.Close;
+  DB.FDQueryProduto.Open();
+  while not DB.FDQueryProduto.Eof do
+  begin
+    CarregarListaProdutos(DB.FDQueryProdutoid.AsInteger,
+                          DB.FDQueryProdutonome.AsString,
+                          DB.FDQueryProdutodescricao.AsString,
+                          DB.FDQueryProdutovalor.AsFloat
+                          );
+    DB.FDQueryProduto.Next;
+  end;
+end;
+
+procedure TForm7.RemoveItem(Sender: TObject);
+begin
+
+end;
+
+end.

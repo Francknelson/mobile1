@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Android64</Platform>
         <TargetedPlatforms>33819</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>Project1.dpr</MainSource>
@@ -235,6 +235,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -249,6 +251,8 @@
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -259,7 +263,7 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="DB\UDB.pas">
-            <Form>DB</Form>
+            <Form>DataModule2</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
@@ -267,11 +271,7 @@
             <Form>Form2</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="TelaInicial.pas">
-            <Form>Form3</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
-        <DCCReference Include="Produtos.pas">
+        <DCCReference Include="Produtos1.pas">
             <Form>Form5</Form>
             <FormType>fmx</FormType>
         </DCCReference>
@@ -281,6 +281,22 @@
         </DCCReference>
         <DCCReference Include="Produto2.pas">
             <Form>Form6</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="Produtos.pas">
+            <Form>Form7</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="Inicial.pas">
+            <Form>Form8</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="Cadastro_full.pas">
+            <Form>Form9</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="Favoritos.pas">
+            <Form>Form10</Form>
             <FormType>fmx</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -303,20 +319,51 @@
                 <Source>
                     <Source Name="MainSource">Project1.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
-                    <Platform Name="OSX32">
+                <DeployFile LocalName="DB\banco.db" Configuration="Release" Class="File">
+                    <Platform Name="All Platforms">
+                        <RemoteDir>.\assets\internal</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteName>banco.db</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
-                    <Platform Name="iOSSimulator">
+                <DeployFile LocalName="D_NQ_NP_907326-MLB41960453375_052020-O.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>D_NQ_NP_907326-MLB41960453375_052020-O.jpg</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libpcre.dylib" Class="DependencyModule">
-                    <Platform Name="iOSSimulator">
+                <DeployFile LocalName="estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -326,15 +373,294 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\Project1.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>Project1.rsm</RemoteName>
+                <DeployFile LocalName="heart_nosel.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>heart_nosel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="D_NQ_NP_907326-MLB41960453375_052020-O.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>D_NQ_NP_907326-MLB41960453375_052020-O.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="maxresdefault.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>maxresdefault.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="1137_1.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>1137_1.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="maxresdefault.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>maxresdefault.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="pngwing.com.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>pngwing.com.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Logo.png" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>Logo.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Logo.png" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>Logo.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="maxresdefault.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>maxresdefault.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Logo.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>Logo.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="03e8cab732e26a2eb8f83b588aaa9b42.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>03e8cab732e26a2eb8f83b588aaa9b42.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>estatueta_decorativa_de_resina_valence_buda_14x39cm_1567881089_9b9e_600x600.avif</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_nosel.png" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>heart_nosel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="03e8cab732e26a2eb8f83b588aaa9b42.png" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>03e8cab732e26a2eb8f83b588aaa9b42.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Win64\Debug\Project1.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>Project1.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Release\Project1.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>Project1.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="wp5126580.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>wp5126580.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="1137_1.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>1137_1.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="D_NQ_NP_907326-MLB41960453375_052020-O.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>D_NQ_NP_907326-MLB41960453375_052020-O.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="wp5126580.jpg" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>wp5126580.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="D_NQ_NP_907326-MLB41960453375_052020-O.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>D_NQ_NP_907326-MLB41960453375_052020-O.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="maxresdefault.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>maxresdefault.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="03e8cab732e26a2eb8f83b588aaa9b42.png" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>03e8cab732e26a2eb8f83b588aaa9b42.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_nosel.png" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>heart_nosel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_yessel.png" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>heart_yessel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_yessel.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>heart_yessel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="pngwing.com.png" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>pngwing.com.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="1137_1.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>1137_1.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\Project1.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>Project1.rsm</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Logo.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>Logo.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="pngwing.com.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>pngwing.com.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="03e8cab732e26a2eb8f83b588aaa9b42.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>03e8cab732e26a2eb8f83b588aaa9b42.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="pngwing.com.png" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>pngwing.com.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libpcre.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="wp5126580.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>wp5126580.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="wp5126580.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>wp5126580.jpg</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_yessel.png" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>heart_yessel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_yessel.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>heart_yessel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="DB\banco.db" Configuration="Debug" Class="File">
+                    <Platform Name="All Platforms">
+                        <RemoteDir>.\assets\internal</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteName>banco.db</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="heart_nosel.png" Configuration="Debug" Class="File">
+                    <Platform Name="Android64">
+                        <RemoteName>heart_nosel.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="1137_1.jpg" Configuration="Release" Class="File">
+                    <Platform Name="Android">
+                        <RemoteName>1137_1.jpg</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

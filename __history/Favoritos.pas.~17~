@@ -1,0 +1,140 @@
+unit Favoritos;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.MultiView,IOUtils,
+  FMX.TabControl;
+
+type
+  TForm10 = class(TForm)
+    Image1: TImage;
+    Layout1: TLayout;
+    Label1: TLabel;
+    Layout2: TLayout;
+    Rectangle1: TRectangle;
+    Image2: TImage;
+    Button1: TButton;
+    StyleBook1: TStyleBook;
+    ListaFavoritos: TVertScrollBox;
+    RoundRect1: TRoundRect;
+    Label2: TLabel;
+    procedure FormShow(Sender: TObject);
+    procedure RoundRect1Click(Sender: TObject);
+  private
+    { Private declarations }
+     procedure GetListaFavoritos;
+  public
+    { Public declarations }
+  end;
+
+var
+  Form10: TForm10;
+
+implementation
+
+{$R *.fmx}
+
+uses UDB;
+
+{ TForm10 }
+
+procedure TForm10.FormShow(Sender: TObject);
+begin
+  GetListaFavoritos;
+end;
+
+procedure TForm10.GetListaFavoritos;
+var
+  rect, rect_barra: TRectangle;
+  rect_icone: TCircle;
+  lbl: TLabel;
+  img: TImage;
+  i, valorEstrela: integer;
+
+begin
+  DB.FDQueryListaFavoritos.Close;
+  DB.FDQueryListaFavoritos.Open();
+
+  while not DB.FDQueryListaFavoritos.Eof do
+  begin
+      // fundo
+    rect := TRectangle.Create(ListaFavoritos);
+    with rect do
+    begin
+      Align := TAlignLayout.Top;
+      Height := 110;
+      Fill.Color := $FF616161;
+      Stroke.Kind := TBrushKind.Solid;
+      Stroke.Color := $FFD4D5D7;
+      Margins.Top := 10;
+      Margins.Left := 10;
+      Margins.Right := 10;
+      XRadius := 8;
+      YRadius := 8;
+      TagString := DB.FDQueryListaFavoritosid.AsString;
+    end;
+
+    // Barra inferior...
+    rect_barra := TRectangle.Create(rect);
+    with rect_barra do
+    begin
+      Align := TAlignLayout.Bottom;
+      Height := 45;
+      Fill.Color := $FFF4F4F4;
+      Stroke.Kind := TBrushKind.Solid;
+      Stroke.Color := $FFD4D5D7;
+      Sides := [TSide.Left, TSide.Bottom, TSide.Right];
+      XRadius := 8;
+      YRadius := 8;
+      Corners := [TCorner.BottomLeft, TCorner.BottomRight];
+      HitTest := False;
+      rect.AddObject(rect_barra);
+    end;
+
+    lbl := TLabel.Create(rect);
+    with lbl do
+    begin
+      StyledSettings := StyledSettings - [TStyledSetting.Size,
+        TStyledSetting.FontColor, TStyledSetting.Style];
+      TextSettings.FontColor := $FF333333;
+      Text := DB.FDQueryListaFavoritosnome.AsString;
+      font.Size := 16;
+      font.Style := [TFontStyle.fsBold];
+      Position.x := 50;
+      Position.Y := 10;
+      Width := 200;
+      rect.AddObject(lbl);
+    end;
+
+    lbl := TLabel.Create(rect_barra);
+    with lbl do
+    begin
+      StyledSettings := StyledSettings - [TStyledSetting.Size,
+        TStyledSetting.FontColor, TStyledSetting.Style];
+      TextSettings.FontColor := $FFDF0B0B;
+      Text := DB.FDQueryListaFavoritosdescricao.AsString;;
+      font.Size := 11;
+      font.Style := [TFontStyle.fsBold];
+      Position.x := 5;
+      Position.Y := 70;
+      Width := 500;
+      rect.AddObject(lbl);
+    end;
+
+  ListaFavoritos.AddObject(rect);
+  DB.FDQueryListaFavoritos.Next;
+  end;
+end;
+
+procedure TForm10.RoundRect1Click(Sender: TObject);
+begin
+   if not Assigned(Form7) then
+      Application.CreateForm(TForm7, Form7);
+    Form7.Show;
+    Form3.Close;
+end;
+
+end.

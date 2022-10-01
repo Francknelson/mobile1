@@ -6,24 +6,35 @@ object DataModule2: TDataModule2
     Params.Strings = (
       
         'Database=C:\Users\franc\OneDrive\Documentos\Embarcadero\Studio\P' +
-        'rojects\banco.db'
+        'rojects\DB\banco.db'
       'LockingMode=Normal'
       'DriverID=SQLite')
     Connected = True
     LoginPrompt = False
+    AfterConnect = FDConnection1AfterConnect
+    BeforeConnect = FDConnection1BeforeConnect
     Left = 48
     Top = 40
   end
   object FDQueryPessoa: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
-      'select * from pessoa')
+      'select * from pessoa'
+      'where usuario=:pUsuario')
     Left = 48
     Top = 120
+    ParamData = <
+      item
+        Name = 'PUSUARIO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
     object FDQueryPessoaid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object FDQueryPessoanome: TStringField
       FieldName = 'nome'
@@ -35,20 +46,216 @@ object DataModule2: TDataModule2
       Origin = 'usuario'
       Size = 60
     end
-    object FDQueryPessoasenha: TStringField
-      FieldName = 'senha'
-      Origin = 'senha'
-      Size = 8
+    object FDQueryPessoacpf: TStringField
+      FieldName = 'cpf'
+      Origin = 'cpf'
+      Size = 11
+    end
+    object FDQueryPessoacelular: TStringField
+      FieldName = 'celular'
+      Origin = 'celular'
+      Size = 13
+    end
+    object FDQueryPessoacep: TStringField
+      FieldName = 'cep'
+      Origin = 'cep'
+      Size = 10
     end
     object FDQueryPessoaendereco: TStringField
       FieldName = 'endereco'
       Origin = 'endereco'
       Size = 60
     end
-    object FDQueryPessoatelefone: TStringField
-      FieldName = 'telefone'
-      Origin = 'telefone'
-      Size = 15
+    object FDQueryPessoacidade: TStringField
+      FieldName = 'cidade'
+      Origin = 'cidade'
+      Size = 60
     end
+    object FDQueryPessoauf: TStringField
+      FieldName = 'uf'
+      Origin = 'uf'
+      FixedChar = True
+      Size = 2
+    end
+    object FDQueryPessoabairro: TStringField
+      FieldName = 'bairro'
+      Origin = 'bairro'
+      Size = 60
+    end
+    object FDQueryPessoaemail: TStringField
+      FieldName = 'email'
+      Origin = 'email'
+      Size = 60
+    end
+    object FDQueryPessoasenha: TStringField
+      FieldName = 'senha'
+      Origin = 'senha'
+      Size = 40
+    end
+    object FDQueryPessoaimg_usuario: TBlobField
+      FieldName = 'img_usuario'
+      Origin = 'img_usuario'
+    end
+    object FDQueryPessoagenero: TWideStringField
+      FieldName = 'genero'
+      Origin = 'genero'
+      Size = 32767
+    end
+    object FDQueryPessoadata_nascimento: TDateField
+      FieldName = 'data_nascimento'
+      Origin = 'data_nascimento'
+    end
+    object FDQueryPessoacomplemento: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'complemento'
+      Calculated = True
+    end
+  end
+  object FDQueryProduto: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from produto')
+    Left = 48
+    Top = 184
+    object FDQueryProdutoid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQueryProdutonome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
+    end
+    object FDQueryProdutodescricao: TStringField
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Size = 200
+    end
+    object FDQueryProdutovalor: TBCDField
+      FieldName = 'valor'
+      Origin = 'valor'
+      Precision = 14
+      Size = 2
+    end
+    object FDQueryProdutoquantidade: TIntegerField
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+    end
+    object FDQueryProdutoimg_produto: TBlobField
+      FieldName = 'img_produto'
+      Origin = 'img_produto'
+    end
+    object FDQueryProdutofavorito: TStringField
+      FieldName = 'favorito'
+      Origin = 'favorito'
+      Size = 5
+    end
+  end
+  object FDQueryFavorito: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM produto'
+      'WHERE id = :pIdProduto'
+      'AND favorito = '#39'S'#39)
+    Left = 48
+    Top = 256
+    ParamData = <
+      item
+        Name = 'PIDPRODUTO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    object FDQueryFavoritoid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQueryFavoritonome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
+    end
+    object FDQueryFavoritodescricao: TStringField
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Size = 200
+    end
+    object FDQueryFavoritovalor: TBCDField
+      FieldName = 'valor'
+      Origin = 'valor'
+      Precision = 14
+      Size = 2
+    end
+    object FDQueryFavoritoquantidade: TIntegerField
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+    end
+    object FDQueryFavoritofavorito: TStringField
+      FieldName = 'favorito'
+      Origin = 'favorito'
+      Size = 5
+    end
+    object FDQueryFavoritoimg_produto: TBlobField
+      FieldName = 'img_produto'
+      Origin = 'img_produto'
+    end
+  end
+  object FDQueryListaFavoritos: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from produto'
+      'where favorito = '#39'S'#39)
+    Left = 160
+    Top = 256
+    object FDQueryListaFavoritosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQueryListaFavoritosnome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
+    end
+    object FDQueryListaFavoritosdescricao: TStringField
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Size = 200
+    end
+    object FDQueryListaFavoritosvalor: TBCDField
+      FieldName = 'valor'
+      Origin = 'valor'
+      Precision = 14
+      Size = 2
+    end
+    object FDQueryListaFavoritosquantidade: TIntegerField
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+    end
+    object FDQueryListaFavoritosfavorito: TStringField
+      FieldName = 'favorito'
+      Origin = 'favorito'
+      Size = 5
+    end
+    object FDQueryListaFavoritosimg_produto: TBlobField
+      FieldName = 'img_produto'
+      Origin = 'img_produto'
+    end
+  end
+  object FDQueryPedidos: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM pedido')
+    Left = 272
+    Top = 256
+  end
+  object FDQueryItemPedido: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM item_pedido')
+    Left = 368
+    Top = 256
   end
 end

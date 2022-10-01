@@ -1,0 +1,61 @@
+unit Cadastro;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,idHashSHA, UDB,
+  FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts;
+
+type
+  TForm2 = class(TForm)
+    Image1: TImage;
+    Layout1: TLayout;
+    Label1: TLabel;
+    Image2: TImage;
+    Layout2: TLayout;
+    Label2: TLabel;
+    campo_nome_cad: TEdit;
+    Label3: TLabel;
+    campo_usuario_cad: TEdit;
+    Label4: TLabel;
+    campo_senha_cad: TEdit;
+    Label5: TLabel;
+    RoundRect1: TRoundRect;
+    Label6: TLabel;
+    procedure Label6Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+{$R *.fmx}
+
+uses Login;
+
+procedure TForm2.Label6Click(Sender: TObject);
+begin
+  DB.FDQueryPessoa.Close;
+  DB.FDQueryPessoa.Open();
+
+  if(campo_nome_cad.Text = EmptyStr) or (campo_usuario_cad.Text = EmptyStr)
+  or (campo_senha_cad.Text = EmptyStr) then
+  Abort;
+
+  DB.FDQueryPessoa.Append;
+  DB.FDQueryPessoausuario.AsString := campo_usuario_cad.Text;
+  DB.FDQueryPessoanome.AsString := campo_usuario_cad.Text;
+  DB.FDQueryPessoasenha.AsString := Form1.Login.SHA1FromString(campo_senha_cad.Text);
+  DB.FDQueryPessoa.Post;
+  DB.FDConnection1.CommitRetaining;
+
+  Form1.Show();
+end;
+
+end.

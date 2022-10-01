@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit;
+  idHashSHA,
+  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit, Utils;
 
 type
   TForm1 = class(TForm)
@@ -17,19 +18,18 @@ type
     campo_usuario: TEdit;
     campo_senha: TEdit;
     Label4: TLabel;
-    RadioButton1: TRadioButton;
+    remember: TRadioButton;
     Label5: TLabel;
     RoundRect1: TRoundRect;
     Layout2: TLayout;
     Label2: TLabel;
-    Label6: TLabel;
-    procedure Label6Click(Sender: TObject);
-    procedure Label2Click(Sender: TObject);
+    Label7: TLabel;
     procedure RoundRect1Click(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    function SHA1FromString(const AString: string): string;
   end;
 
 var
@@ -39,22 +39,49 @@ implementation
 
 {$R *.fmx}
 
-uses Cadastro, TelaInicial;
+uses Cadastro, TelaInicial, UDB, Produtos;
 {$R *.LgXhdpiPh.fmx ANDROID}
 
-procedure TForm1.Label2Click(Sender: TObject);
-begin
-  Form3.Show();
-end;
-
-procedure TForm1.Label6Click(Sender: TObject);
-begin
-     Form2.Show();
-end;
 
 procedure TForm1.RoundRect1Click(Sender: TObject);
+var
+  senha: string;
+
 begin
-   Form3.Show();
+    senha := SHA1FromString(campo_senha.Text);
+
+  DB.FDQueryPessoa.Close;
+  DB.FDQueryPessoa.ParamByName('pusuario').AsString := campo_usuario.Text;
+  DB.FDQueryPessoa.Open();
+
+  if not (DB.FDQueryPessoa.IsEmpty) and (senha = DB.FDQueryPessoasenha.AsString) then
+  begin
+    if not Assigned(Form7) then
+      Application.CreateForm(TForm7, Form7);
+    Form7.Show;
+    if not remember.IsChecked then
+      campo_usuario.Text := '';
+      campo_senha.Text := '';
+    Form1.Close;
+
+  end
+  else
+  begin
+    ShowMessage('Login ou senha não confere');
+  end;
+
+end;
+
+function TForm1.SHA1FromString(const AString: string): string;
+var
+  SHA1: TIdHashSHA1;
+begin
+  SHA1 := TIdHashSHA1.Create;
+  try
+    Result := SHA1.HashStringAsHex(AString);
+  finally
+    SHA1.Free;
+  end;
 end;
 
 end.
